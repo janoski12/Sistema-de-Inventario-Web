@@ -7,14 +7,12 @@ import RegistroEmpleados from '../components/RegistroEmpleados.vue';
 import AdministracionUsuarios from '../components/AdministracionUsuarios.vue';
 import ListaDepartamentos from '../components/ListaDepartamentos.vue';
 import ListaPuestos from '../components/ListaPuestos.vue';
-import auth from '../middleware/auth';
 
 
 const routes = [
     { 
         path: '/', 
         component: MenuPrincipal,
-        beforeEnter: auth
     },
     { 
         path: '/buscar-articulos', 
