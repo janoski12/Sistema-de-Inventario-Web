@@ -2,6 +2,7 @@ const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(cors());
@@ -47,6 +48,17 @@ sql
         res.status(500).send('Error al iniciar sesion');
       }
     });   
+
+    function authenticateToken(req, res, next) {
+      const token = req.headers['authorization'];
+      if (!token) return res.status(401).json({ message: 'No autorizado' });
+
+      jwt.verify(token, 'secretkey', (err, user) => {
+        if (err) return res.status(403).json({ message: 'Token Invalido '});
+        req.user = user;
+        next();
+      });
+    }
     
 
     //Seleccionar los articulos
