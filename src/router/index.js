@@ -7,12 +7,17 @@ import RegistroEmpleados from '../components/RegistroEmpleados.vue';
 import AdministracionUsuarios from '../components/AdministracionUsuarios.vue';
 import ListaDepartamentos from '../components/ListaDepartamentos.vue';
 import ListaPuestos from '../components/ListaPuestos.vue';
+import FormLogin from '../views/FormLogin.vue';
 
 
 const routes = [
+    {
+        path: '/login',
+        component: FormLogin
+    },
     { 
         path: '/', 
-        component: MenuPrincipal,
+        component: MenuPrincipal
     },
     { 
         path: '/buscar-articulos', 
