@@ -21,6 +21,34 @@ const config = {
 sql
   .connect(config)
   .then((pool) => {
+    
+    app.post('/api/login', async (req, res) => {
+      const { username, password } = req.body
+      try {
+        const user = await pool.request()
+        .input('username', username)
+        .query('SELECT * FROM Usuarios WHERE Usuario = @username');
+
+        if (user.recordset.length === 0) {
+          return res.status(401).send('Usuario no encontrado');
+        }
+
+        const hashedPassword = user.recordset[0].Password;
+        const isValidPassword = await bcrypt.compare(password, hashedPassword);
+
+        if (!isValidPassword) {
+          return res.status(401).send('Contraseña incorrecta');
+        }
+
+        const token = jwt.sign({ userId: user.recordset[0].IdUsuario }, 'secretkey', { expiresIn: '1h' });
+        res.json({ token });
+      } catch (error) {
+        console.error('Error al iniciar sesion', error);
+        res.status(500).send('Error al iniciar sesion');
+      }
+    });   
+    
+
     //Seleccionar los articulos
     app.get("/api/articulos", async (req, res) => {
       try {

@@ -7,17 +7,43 @@ import RegistroEmpleados from '../components/RegistroEmpleados.vue';
 import AdministracionUsuarios from '../components/AdministracionUsuarios.vue';
 import ListaDepartamentos from '../components/ListaDepartamentos.vue';
 import ListaPuestos from '../components/ListaPuestos.vue';
+import auth from '../middleware/auth';
 
 
 const routes = [
-    { path: '/', component: MenuPrincipal },
-    { path: '/buscar-articulos', component: BuscarArticulos },
-    { path: '/entrega-activos', component: EntregaActivos },
-    { path: '/descargo-activos', component: DescargoActivos },
-    { path: '/registro-empleados', component: RegistroEmpleados },
-    { path: '/administracion-usuarios', component: AdministracionUsuarios },
-    { path: '/lista-departamentos', component: ListaDepartamentos },
-    { path: '/lista-puestos', component: ListaPuestos},
+    { 
+        path: '/', 
+        component: MenuPrincipal,
+        beforeEnter: auth
+    },
+    { 
+        path: '/buscar-articulos', 
+        component: BuscarArticulos
+    },
+    { 
+        path: '/entrega-activos', 
+        component: EntregaActivos
+    },
+    { 
+        path: '/descargo-activos', 
+        component: DescargoActivos 
+    },
+    { 
+        path: '/registro-empleados', 
+        component: RegistroEmpleados 
+    },
+    { 
+        path: '/administracion-usuarios', 
+        component: AdministracionUsuarios 
+    },
+    { 
+        path: '/lista-departamentos', 
+        component: ListaDepartamentos 
+    },
+    { 
+        path: '/lista-puestos', 
+        component: ListaPuestos
+    },
 ];
 
 const router = new createRouter({
