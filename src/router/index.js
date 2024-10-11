@@ -7,42 +7,64 @@ import RegistroEmpleados from '../components/RegistroEmpleados.vue';
 import AdministracionUsuarios from '../components/AdministracionUsuarios.vue';
 import ListaDepartamentos from '../components/ListaDepartamentos.vue';
 import ListaPuestos from '../components/ListaPuestos.vue';
+import auth from '@/middleware/auth';
 
 
 
 const routes = [
     { 
-        path: '/', 
+        path: '/',
+        name: 'home', 
         component: MenuPrincipal,
+        beforeEnter: auth
     },
     { 
         path: '/buscar-articulos', 
+        name: 'buscar-artículos',
         component: BuscarArticulos,
+        beforeEnter: auth
     },
     { 
-        path: '/entrega-activos', 
+        path: '/entrega-activos',
+        name: 'entrega-activos', 
         component: EntregaActivos,
+        beforeEnter: auth
     },
     { 
-        path: '/descargo-activos', 
+        path: '/descargo-activos',
+        name: 'descargo-activos', 
         component: DescargoActivos ,
+        beforeEnter: auth
     },
     { 
         path: '/registro-empleados', 
+        name: 'registro-empleados',
         component: RegistroEmpleados,
+        beforeEnter: auth
     },
     { 
-        path: '/administracion-usuarios', 
+        path: '/administracion-usuarios',
+        name: 'administracion-usuarios', 
         component: AdministracionUsuarios,
+        beforeEnter: auth
     },
     { 
         path: '/lista-departamentos', 
+        name: 'lista-departamentos',
         component: ListaDepartamentos,
+        beforeEnter: auth
     },
     { 
-        path: '/lista-puestos', 
+        path: '/lista-puestos',
+        name: 'lista-puestos',
         component: ListaPuestos,
+        beforeEnter: auth
     },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/components/LoginForm.vue')
+    }
 ];
 
 const router = new createRouter({

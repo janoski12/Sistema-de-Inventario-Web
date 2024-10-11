@@ -24,42 +24,35 @@ sql
   .then((pool) => {
     
     app.post('/api/login', async (req, res) => {
-      const { username, password } = req.body
+      console.log('Solicitud de login recibida:', req.body)
+      const { usuario, password } = req.body;
       try {
         const user = await pool.request()
-        .input('username', username)
-        .query('SELECT * FROM Usuarios WHERE Usuario = @username');
-
+          .input('usuario', usuario)
+          .query('SELECT * FROM Usuarios WHERE Usuario = @usuario');
+    
         if (user.recordset.length === 0) {
-          return res.status(401).send('Usuario no encontrado');
+          return res.status(401).json({ error: 'Usuario no encontrado' });
         }
-
+    
         const hashedPassword = user.recordset[0].Password;
-        const isValidPassword = await bcrypt.compare(password, hashedPassword);
+        const isValidPassword = await bcrypt.compare(password.trim(), hashedPassword);
 
+        console.log('Contraseña ingresada:', password.trim());
+        console.log('Contraseña almacenada:', hashedPassword);
+        console.log('¿Es válida la contraseña?', isValidPassword);
+    
         if (!isValidPassword) {
-          return res.status(401).send('Contraseña incorrecta');
+          return res.status(401).json({ error: 'Contraseña incorrecta' });
         }
-
+    
         const token = jwt.sign({ userId: user.recordset[0].IdUsuario }, 'secretkey', { expiresIn: '1h' });
         res.json({ token });
       } catch (error) {
-        console.error('Error al iniciar sesion', error);
-        res.status(500).send('Error al iniciar sesion');
+        console.error('Error al iniciar sesión:', error);
+        res.status(500).json({ error: 'Error al iniciar sesión' });
       }
-    });   
-
-    function authenticateToken(req, res, next) {
-      const token = req.headers['authorization'];
-      if (!token) return res.status(401).json({ message: 'No autorizado' });
-
-      jwt.verify(token, 'secretkey', (err, user) => {
-        if (err) return res.status(403).json({ message: 'Token Invalido '});
-        req.user = user;
-        next();
-      });
-    }
-    
+    });
 
     //Seleccionar los articulos
     app.get("/api/articulos", async (req, res) => {
@@ -308,7 +301,7 @@ sql
       try {
         // Encriptar la contraseña
         const salt = await bcrypt.genSalt(10);
-        const passwordHasheada = await bcrypt.hash(Password, salt);
+        const passwordHasheada = await bcrypt.hash(Password.trim(), salt);
 
         // Ejecutar la consulta SQL para agregar el usuario
         await pool
