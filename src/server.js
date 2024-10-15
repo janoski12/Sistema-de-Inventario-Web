@@ -1,4 +1,5 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 const express = require('express');
 const bodyParser = require('body-parser');
 const sql = require('mssql');
