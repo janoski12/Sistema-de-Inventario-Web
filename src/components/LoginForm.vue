@@ -27,9 +27,21 @@ export default {
                 const response = await fetch('http://localhost:5000/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ Usuario: this.Usuario, Password: this.Password.trim() })
+                    body: JSON.stringify({ usuario: this.Usuario, password: this.Password.trim() })
                 })
+
+                console.log('Solicitud de login:', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Usuario: this.Usuario,
+                        Password: this.Password.trim()
+                        })
+                });
                 const data = await response.json()
+                console.log('Respuesta del servidor:', data)
                 if (data.token) {
                     localStorage.setItem('token', data.token)
                     this.$router.push('/')

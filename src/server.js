@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const sql = require('mssql');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -23,6 +24,8 @@ sql
   .connect(config)
   .then((pool) => {
     
+    app.use(bodyParser.json());
+    
     app.post('/api/login', async (req, res) => {
       console.log('Solicitud de login recibida:', req.body)
       const { usuario, password } = req.body;
@@ -36,10 +39,11 @@ sql
         }
     
         const hashedPassword = user.recordset[0].Password;
-        const isValidPassword = await bcrypt.compare(password.trim(), hashedPassword);
-
+        console.log('Usuario recuperado de la base de datos:', user.recordset[0]);
         console.log('Contraseña ingresada:', password.trim());
         console.log('Contraseña almacenada:', hashedPassword);
+    
+        const isValidPassword = await bcrypt.compare(password.trim(), hashedPassword);
         console.log('¿Es válida la contraseña?', isValidPassword);
     
         if (!isValidPassword) {
