@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const sql = require('mssql');
@@ -50,12 +51,30 @@ sql
           return res.status(401).json({ error: 'Contraseña incorrecta' });
         }
     
-        const token = jwt.sign({ userId: user.recordset[0].IdUsuario }, 'secretkey', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.recordset[0].IdUsuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ error: 'Error al iniciar sesión' });
       }
+    });
+
+    app.get('/api/verify-token', (req, res) => {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ message: 'No se proporciono token' });
+      }
+
+      try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        res.status(200).json({ message: 'Token valido' });
+      } catch (error) {
+        res.status(401).json({ message: 'Token Invalido' });
+      }
+    })
+
+    app.post('/api/logout', (req, res) => {
+      res.status(200).json({ message: 'Sesion cerrada exitosamente' });
     });
 
     //Seleccionar los articulos

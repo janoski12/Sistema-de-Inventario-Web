@@ -19,8 +19,46 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: 'App', 
+  name: 'App',
+  async created() {
+    await this.checkAuth();
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.logout);
+  },
+  beforeUnmount() {
+    window.removeEventListener('beforeunload', this.logout);
+  },
+  methods: {
+    async checkAuth() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        this.$router.push('/login');
+        return;
+      }
+      try {
+        await axios.get('http://localhost:5000/api/verfy-token', {
+          headers: { Authorization:  `Bearer ${token}` }
+        });
+      } catch (error) {
+        console.error('Error de autenticacion:', error)
+        localStorage.removeItem('token');
+        this.$router.push('/login');
+      }
+    },
+    async  logout() {
+      try {
+        await axios.post('http://localhost:5000/api/logout');
+        localStorage.removeItem('token');
+        this.$router.push('/login');
+      } catch (error) {
+        console.error('Error de logout:', error);
+      }
+    }
+  }
 };
 </script>
 

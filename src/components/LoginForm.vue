@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -50,6 +52,18 @@ export default {
                 }
             } catch (error) {
                 console.error(error)
+            }
+        
+        
+        },
+
+        async logout() {
+            try {
+                await axios.post('http://localhost:5000/api/logout');
+                localStorage.removeItem('token');
+                this.$router.push('/login');
+            } catch (error) {
+                console.error('Error al cerrar sesion:', error);
             }
         }
     }
